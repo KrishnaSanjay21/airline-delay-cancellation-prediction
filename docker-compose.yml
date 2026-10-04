@@ -1,0 +1,18 @@
+services:
+  pipeline:
+    build: .
+    profiles: ["pipeline"]
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./artifacts:/app/artifacts
+    entrypoint: ["airline-risk"]
+    command: ["run-all"]
+
+  dashboard:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+

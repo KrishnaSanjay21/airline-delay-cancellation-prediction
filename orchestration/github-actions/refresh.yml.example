@@ -1,0 +1,36 @@
+name: Refresh BTS and NOAA models
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        required: true
+        description: "Inclusive YYYY-MM-DD start"
+      end_date:
+        required: true
+        description: "Inclusive YYYY-MM-DD end"
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      NOAA_TOKEN: ${{ secrets.NOAA_TOKEN }}
+      START_DATE: ${{ inputs.start_date }}
+      END_DATE: ${{ inputs.end_date }}
+      TOP_AIRPORTS: "25"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install .
+      - name: Validate NOAA token
+        run: test -n "$NOAA_TOKEN" || (echo "Missing NOAA_TOKEN secret" && exit 1)
+      - run: airline-risk run-all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: airline-risk-model-artifacts
+          path: artifacts/
+          retention-days: 30
+

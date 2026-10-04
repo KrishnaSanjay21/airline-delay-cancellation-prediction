@@ -2,7 +2,13 @@ services:
   pipeline:
     build: .
     profiles: ["pipeline"]
-    env_file: .env
+    environment:
+      NOAA_TOKEN: ${NOAA_TOKEN:-}
+      START_DATE: ${START_DATE:-2024-01-01}
+      END_DATE: ${END_DATE:-2024-03-31}
+      BTS_DATASET: ${BTS_DATASET:-reporting}
+      TOP_AIRPORTS: ${TOP_AIRPORTS:-25}
+      RANDOM_SEED: ${RANDOM_SEED:-42}
     volumes:
       - ./data:/app/data
       - ./artifacts:/app/artifacts

@@ -124,8 +124,11 @@ def normalize_weather(observations: list[dict[str, Any]], airport: str) -> pd.Da
     ).reset_index()
     wide.columns.name = None
     wide = wide.rename(columns={value: value.lower() for value in WEATHER_TYPES})
+    for column in (value.lower() for value in WEATHER_TYPES):
+        if column not in wide:
+            wide[column] = pd.NA
     wide.insert(0, "airport", airport)
-    return wide
+    return wide[["airport", "weather_date", *[value.lower() for value in WEATHER_TYPES]]]
 
 
 def fetch_weather_universe(

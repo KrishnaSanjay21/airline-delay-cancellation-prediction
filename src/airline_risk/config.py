@@ -32,7 +32,7 @@ class Settings(BaseSettings):
         return value
 
     @model_validator(mode="after")
-    def chronological_range(self) -> "Settings":
+    def chronological_range(self) -> Settings:
         if self.end_date < self.start_date:
             raise ValueError("END_DATE must be on or after START_DATE")
         return self

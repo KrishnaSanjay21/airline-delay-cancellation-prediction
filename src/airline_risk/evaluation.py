@@ -31,7 +31,7 @@ def binary_metrics(y_true: pd.Series | np.ndarray, probability: np.ndarray) -> d
         float(average_precision_score(y, probability)) if np.unique(y).size == 2 else None
     )
     return {
-        "rows": int(len(y)),
+        "rows": len(y),
         "positive_rate": float(y.mean()),
         "roc_auc": roc_auc,
         "average_precision": average_precision,
